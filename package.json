@@ -1,5 +1,5 @@
 {
-  "name": "@hcaptcha/vue-hcaptcha",
+  "name": "vue-hcaptcha",
   "version": "0.2.2",
   "main": "./src/main.js",
   "author": "Ali Neer",
@@ -8,11 +8,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/hCaptcha/vue-hcaptcha.git",
-    "web": "https://github.com/hCaptcha/vue-hcaptcha"
+    "url": "https://github.com/atomminer/vue-hcaptcha.git",
+    "web": "https://github.com/atomminer/vue-hcaptcha"
   },
   "bugs": {
-    "url": "https://github.com/hCaptcha/vue-hcaptcha/issues"
+    "url": "https://github.com/atomminer/vue-hcaptcha/issues"
   },
   "scripts": {
     "test": "vue-cli-service test:unit",

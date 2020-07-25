@@ -29,6 +29,10 @@ module.exports = {
         },
         tabindex: {
             type: String 
+        },
+        popupclass: {
+            type: String,
+            default: ''
         }
     },
     mounted() {
@@ -64,6 +68,26 @@ module.exports = {
                 let container = this.$slots.default ? this.$el.children[0] : this.$el;
                 this.$widgetId = hcaptcha.render(container, opt);
             }
+
+            // act like official hcapthca if no popup class is required
+            if(this.popupclass && this.popupclass.length) {
+                // hcaptcha creates both checkbox and challenge iframes right away
+                // hacky hack to make sure hcaptha's iframes are added to the DOM
+				setTimeout(() => {
+					let frames = document.getElementsByTagName("iframe");
+					for(var i = 0 ; i < frames.length ; i ++) {
+						var f = frames[i];
+						if(f.src.indexOf('hcaptcha-challenge') == -1) continue;
+                        // as far as I can see, challenge is created wiht body being its (wrapper) parent: body > div > div > iframe
+                        // verify if we have 3 parents and the 3rd one is 'body' before adding required class
+						if(f.parentElement && f.parentElement.parentElement && f.parentElement.parentElement.parentElement) {
+							if(f.parentElement.parentElement.parentElement.nodeName.toLowerCase() !== 'body') continue;
+							if(f.parentElement.parentElement.className.indexOf(this.popupclass) == -1)
+								f.parentElement.parentElement.className += this.popupclass + ' ';
+						}
+					}
+				}, 250);
+			}
         },
         onError(e) {
             if (window.hcaptcha === 'undefined') {

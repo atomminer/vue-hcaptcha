@@ -1,11 +1,15 @@
 # Vue.js hCaptcha Component Library
 
-hCaptcha Component Library for Vue.js, compatible with Vue 2+.
+Forked from hCaptcha Component Library for Vue.js, compatible with Vue 2+.
+
+## What's different
+
+Official hCaptcha doesn't fit most of the screens: Crome for Android, laptop (1366x768), etc which is ugly when page is designed with custom scroll behavior. There's no options to customize hCaptcha, so here's a little hacky way to adjust look and feel of hcapthca's challenge popup.
 
 ## Installation
 You can install this library via npm with:
 ```
-npm install @hcaptcha/vue-hcaptcha --save
+npm install atomminer/vue-hcaptcha --save
 ```
 
 or by including the library in a script tag
@@ -20,7 +24,7 @@ or by including the library in a script tag
 </template>
 
 <script>
-  import VueHcaptcha from '@hcaptcha/vue-hcaptcha';
+  import VueHcaptcha from 'vue-hcaptcha';
   export default {
     ...
     components: { VueHcaptcha }
@@ -33,6 +37,44 @@ This is designed for ease of use with the hCaptcha API!
 
 **Note**: There's a known flaw when there are multiple captchas being rendered. It's recommended to use only one captcha per page.
 
+#### Customizing captcha's popup
+
+To address the problem of hCaptha being larger than visible screen, here's an example of scaling popup to 75% without breaking any functionality:
+
+```
+<template>
+    <vue-hcaptcha sitekey="**Your sitekey here**" popupclass="am-captcha-wrapper"></vue-hcaptcha>
+</template>
+
+<script>
+  import VueHcaptcha from 'vue-hcaptcha';
+  export default {
+    ...
+    components: { VueHcaptcha }
+  };
+</script>
+```
+
+and CSS:
+
+```
+/* start hcaptcha hack */
+.am-captcha-wrapper {
+	transform:scale(0.75);
+	-webkit-transform:scale(0.75);
+	transform-origin:0 0;
+	-webkit-transform-origin:0 0;
+}
+/* scale hcaptcha's backdrop to fill the screen */
+.am-captcha-wrapper > div:nth-child(2) {
+	left: -300%!important;
+	top: -300%!important;
+	width: 600%!important;
+	height: 600%!important;
+}
+/* end hcaptcha hack */
+```
+
 ### Api
 
 #### Props
@@ -43,6 +85,7 @@ This is designed for ease of use with the hCaptcha API!
 |`size`|String (normal, compact, invisible)|No, default: normal|This specifies the "size" of the component. hCaptcha allows you to decide how big the component will appear on render, this always defaults to normal.|
 |`theme`: String (light, dark)|No, default: light|hCaptcha supports both a light and dark theme. If no theme is inherently set, the captcha will always default to light.|
 |`tabindex`|Integer|No, default: 0|Set the tabindex of the widget and popup. When appropriate, this can make navigation of your site more intuitive.|
+|`popupclass`: String|No, default: ''|CSS class to apply to hcaptcha popup wrapper. If no class specified, this component will behave exactly like the official one|
 
 #### Events
 
@@ -50,39 +93,3 @@ This is designed for ease of use with the hCaptcha API!
 - `@expired="onExpired"`
 - `@error="onError"` (The captcha will automatically reset on error)
 
-### FAQ
-
-#### How can I get a sitekey?
-
-Sign up at [hCaptcha](https://www.hcaptcha.com) to get your sitekey today. Check [documentation](https://docs.hcaptcha.com/api#getapikey) for more information.
-
-#### What is hCaptcha?
-
-[hCaptcha](https://www.hcaptcha.com) is a drop-in replacement for reCAPTCHA that earns websites money and helps companies get their data labeled.
-
-### Demo
-
-![Demo](https://raw.githubusercontent.com/hCaptcha/vue-hcaptcha/master/screenshots/demo.gif)
-
-To run the demo, simply ```npm run serve``` after downloading the repo, this will start a development server on localhost:8080. Open your console to see the demo app emitting events.
-
-To test locally, you can run the following NPM commands:
-- ```npm run serve```
-    - This initiates the hot reload dev server from the vue-cli
-- ```npm run build```
-    - This will build your version of the component with your customizations for production.
-- ```npm run lint``` and ```npm run lint:fix```
-    - This will enable ESLint to help keep your code clean!
-
-### TypeScript
-
-Please see the [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/44299) entry.
-
-
-### Note for maintainers: Publishing npm package
-Using the proper credentials (granted to @Hcaptcha org), you'll need to do the following to publish:
-
-- `npm login`
-- Bump version in package.json
-- Commit changes
-- `npm publish .`
